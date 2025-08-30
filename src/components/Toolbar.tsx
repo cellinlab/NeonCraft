@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react';
 import { useSceneStore } from '../store/scene';
 import type { Tool } from '../types';
 import { presetScenes } from '../data/presets';
+import { 
+  LuMousePointer2, 
+  LuHand, 
+  LuType, 
+  LuPaintbrush, 
+  LuTrash2,
+  LuFileText,
+  LuPalette
+} from 'react-icons/lu';
 
 const Toolbar = () => {
   const { currentTool, setTool, addText, loadScene, clearCanvas, newCanvas } = useSceneStore();
@@ -25,23 +34,23 @@ const Toolbar = () => {
     };
   }, [showTemplateMenu]);
 
-  const tools: { id: Tool; label: string; icon: string; description: string; action?: () => void }[] = [
+  const tools: { id: Tool; label: string; icon: React.ReactNode; description: string; action?: () => void }[] = [
     {
       id: 'select',
       label: '选择',
-      icon: '↖',
+      icon: <LuMousePointer2 size={16} />,
       description: '选择和移动元素 (快捷键: V)'
     },
     {
       id: 'pan',
       label: '拖动',
-      icon: '✋',
+      icon: <LuHand size={16} />,
       description: '拖动画布视图 (快捷键: H 或 空格键)'
     },
     {
       id: 'text',
       label: '文字',
-      icon: 'T',
+      icon: <LuType size={16} />,
       description: '添加霓虹文字 (快捷键: T)',
       action: () => {
         setTool('text');
@@ -52,7 +61,7 @@ const Toolbar = () => {
     {
       id: 'draw',
       label: '画笔',
-      icon: '✏',
+      icon: <LuPaintbrush size={16} />,
       description: '自由绘制路径 (快捷键: D)'
     }
   ];
@@ -106,9 +115,10 @@ const Toolbar = () => {
               newCanvas();
             }
           }}
-          className="px-3 py-2 bg-blue-600 text-white text-sm rounded border border-blue-500 hover:bg-blue-700 transition-colors"
+          className="px-3 py-2 bg-blue-600 text-white text-sm rounded border border-blue-500 hover:bg-blue-700 transition-colors flex items-center gap-2"
           title="新建画布"
         >
+          <LuFileText size={14} />
           新建
         </button>
         
@@ -118,9 +128,10 @@ const Toolbar = () => {
               clearCanvas();
             }
           }}
-          className="px-3 py-2 bg-orange-600 text-white text-sm rounded border border-orange-500 hover:bg-orange-700 transition-colors"
+          className="px-3 py-2 bg-orange-600 text-white text-sm rounded border border-orange-500 hover:bg-orange-700 transition-colors flex items-center gap-2"
           title="清空画布"
         >
+          <LuTrash2 size={14} />
           清空
         </button>
       </div>
@@ -128,19 +139,21 @@ const Toolbar = () => {
       <div className="border-l border-gray-700 pl-4 flex items-center gap-3">
         <button
           onClick={() => addText()}
-          className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors"
+          className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors flex items-center gap-2"
         >
+          <LuType size={14} />
           添加文字
         </button>
         
         <div className="relative template-dropdown">
           <button 
-            className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors"
+            className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors flex items-center gap-2"
             onClick={(e) => {
               e.stopPropagation();
               setShowTemplateMenu(!showTemplateMenu);
             }}
           >
+            <LuPalette size={14} />
             模板 ▼
           </button>
           

@@ -163,7 +163,7 @@ const StageCanvas = () => {
         fill={node.fill}
         stroke={node.stroke}
         strokeWidth={node.strokeWidth}
-        opacity={node.opacity || 1}
+        opacity={node.opacity ?? 1}
         rotation={node.rotation || 0}
         scaleX={node.scaleX || 1}
         scaleY={node.scaleY || 1}
@@ -212,7 +212,7 @@ const StageCanvas = () => {
         y={node.y}
         stroke={node.stroke}
         strokeWidth={node.strokeWidth}
-        opacity={node.opacity || 1}
+        opacity={node.opacity ?? 1}
         rotation={node.rotation || 0}
         scaleX={node.scaleX || 1}
         scaleY={node.scaleY || 1}

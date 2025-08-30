@@ -1,6 +1,17 @@
 import { useSceneStore } from '../store/scene';
 import type { Node } from '../types';
 import { useState } from 'react';
+import { 
+  LuType, 
+  LuPaintbrush, 
+  LuEye, 
+  LuEyeOff, 
+  LuLock, 
+  LuLockOpen,
+  LuArrowUp,
+  LuArrowDown,
+  LuTrash2
+} from 'react-icons/lu';
 
 const LayersPanel = () => {
   const { scene, select, bringForward, sendBackward, removeNode, reorderLayers } = useSceneStore();
@@ -40,8 +51,8 @@ const LayersPanel = () => {
     }
   };
 
-  const getNodeIcon = (node: Node): string => {
-    return node.type === 'text' ? 'T' : '✏';
+  const getNodeIcon = (node: Node): React.ReactNode => {
+    return node.type === 'text' ? <LuType size={14} /> : <LuPaintbrush size={14} />;
   };
 
   return (
@@ -116,25 +127,31 @@ const LayersPanel = () => {
                   {/* 可见性切换 */}
                   <button
                     className={`
-                      w-6 h-6 text-sm rounded hover:bg-gray-600 transition-colors
-                      ${(node.opacity || 1) > 0 ? 'text-white' : 'text-gray-500'}
+                      w-6 h-6 flex items-center justify-center rounded border transition-all duration-200
+                      ${(node.opacity ?? 1) > 0 
+                        ? 'text-white bg-gray-700 border-gray-600 hover:bg-gray-600 hover:text-neon-cyan hover:border-gray-500' 
+                        : 'text-gray-500 bg-gray-800 border-gray-700 hover:bg-gray-700 hover:text-gray-400 hover:border-gray-600'
+                      }
                     `}
                     onClick={(e) => {
                       e.stopPropagation();
-                      const newOpacity = (node.opacity || 1) > 0 ? 0 : 1;
+                      const currentOpacity = node.opacity ?? 1;
+                      const newOpacity = currentOpacity > 0 ? 0 : 1;
+
                       useSceneStore.getState().updateNode(node.id, { opacity: newOpacity });
                     }}
                     title="切换显示/隐藏"
                   >
-                    {(node.opacity || 1) > 0 ? '👁' : '👁‍🗨'}
+                    {(node.opacity ?? 1) > 0 ? <LuEye size={12} /> : <LuEyeOff size={12} />}
                   </button>
                   
                   {/* 锁定按钮（占位） */}
                   <button
-                    className="w-6 h-6 text-sm text-gray-500 rounded hover:bg-gray-600 transition-colors"
+                    className="w-6 h-6 flex items-center justify-center text-gray-500 bg-gray-800 border border-gray-700 rounded cursor-not-allowed hover:bg-gray-750 hover:text-gray-400 hover:border-gray-600 transition-all duration-200 opacity-60"
                     title="锁定图层（开发中）"
+                    disabled
                   >
-                    🔓
+                    <LuLockOpen size={12} />
                   </button>
                 </div>
               </div>
@@ -153,14 +170,14 @@ const LayersPanel = () => {
                 className="flex-1 px-3 py-2 bg-gray-700 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
                 title="上移图层"
               >
-                <span>↑</span> 上移
+                <LuArrowUp size={14} /> 上移
               </button>
               <button
                 onClick={() => sendBackward(scene.selectedId!)}
                 className="flex-1 px-3 py-2 bg-gray-700 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
                 title="下移图层"
               >
-                <span>↓</span> 下移
+                <LuArrowDown size={14} /> 下移
               </button>
             </div>
             
@@ -168,7 +185,7 @@ const LayersPanel = () => {
               onClick={() => removeNode(scene.selectedId!)}
               className="w-full px-3 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
             >
-              <span>🗑</span> 删除图层
+              <LuTrash2 size={14} /> 删除图层
             </button>
           </div>
         </div>

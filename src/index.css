@@ -102,6 +102,8 @@ body {
 .cursor-pointer { cursor: pointer; }
 .cursor-grab { cursor: grab; }
 .cursor-grabbing { cursor: grabbing; }
+.cursor-not-allowed { cursor: not-allowed; }
+.opacity-60 { opacity: 0.6; }
 .text-left { text-align: left; }
 .fixed { position: fixed; }
 .inset-0 { inset: 0px; }
