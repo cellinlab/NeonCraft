@@ -41,10 +41,11 @@ const Toolbar = () => {
   };
 
   return (
-    <div className="bg-gray-900 border-r border-gray-700 p-4 flex flex-col gap-2">
-      <h3 className="text-white text-sm font-medium mb-2">工具</h3>
+    <div className="bg-gray-900 border-b border-gray-700 px-6 py-3 flex items-center gap-4">
+      <h3 className="text-white text-sm font-medium">工具:</h3>
       
-      {tools.map((tool) => (
+      <div className="flex gap-2">
+        {tools.map((tool) => (
         <div key={tool.id} className="relative group">
           <button
             onClick={() => handleToolClick(tool.id)}
@@ -60,38 +61,41 @@ const Toolbar = () => {
             {tool.icon}
           </button>
           
-          {/* Hover提示 */}
-          <div className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-90 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-            <div className="font-medium">{tool.label}</div>
-            <div className="text-gray-300 text-xs mt-1">{tool.description}</div>
-            {/* 小箭头 */}
-            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-black border-r-opacity-90"></div>
+                      {/* Hover提示 */}
+            <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-90 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="font-medium">{tool.label}</div>
+              <div className="text-gray-300 text-xs mt-1">{tool.description}</div>
+              {/* 小箭头 */}
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black border-t-opacity-90"></div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
       
-      <div className="border-t border-gray-700 mt-4 pt-4">
-        <h4 className="text-white text-xs font-medium mb-2">快捷操作</h4>
-        
+      <div className="border-l border-gray-700 pl-4 flex items-center gap-3">
         <button
           onClick={() => addText()}
-          className="w-full px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors mb-2"
+          className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors"
         >
           添加文字
         </button>
         
-        <div className="space-y-2">
-          <h5 className="text-white text-xs font-medium">预设模板</h5>
-          {presetScenes.map((preset) => (
-            <button
-              key={preset.id}
-              onClick={() => loadScene(preset)}
-              className="w-full px-2 py-1 bg-gray-800 text-white text-xs rounded border border-gray-600 hover:bg-gray-700 transition-colors text-left"
-              title={`加载模板: ${preset.name}`}
-            >
-              {preset.name}
-            </button>
-          ))}
+        <div className="relative group">
+          <button className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors">
+            模板 ▼
+          </button>
+          <div className="absolute top-full left-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto z-50 min-w-48">
+            {presetScenes.map((preset) => (
+              <button
+                key={preset.id}
+                onClick={() => loadScene(preset)}
+                className="block w-full px-3 py-2 text-white text-xs text-left hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg"
+                title={`加载模板: ${preset.name}`}
+              >
+                {preset.name}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

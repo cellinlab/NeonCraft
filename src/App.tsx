@@ -6,6 +6,7 @@ import StageCanvas from './components/StageCanvas';
 import Toolbar from './components/Toolbar';
 import PropertiesPanel from './components/PropertiesPanel';
 import LayersPanel from './components/LayersPanel';
+import PreviewWindow from './components/PreviewWindow';
 import Player from './components/Player';
 
 function App() {
@@ -54,12 +55,12 @@ function App() {
         </div>
       </header>
 
+      {/* 横向工具栏 */}
+      <Toolbar />
+
       {/* 主内容区 */}
       <div className="flex-1 flex overflow-hidden">
-        {/* 左侧工具栏 */}
-        <Toolbar />
-        
-        {/* 中间画布区域 */}
+        {/* 左侧区域：画布 + 图层面板 */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 flex items-center justify-center">
             <StageCanvas />
@@ -69,8 +70,18 @@ function App() {
           <LayersPanel />
         </div>
         
-        {/* 右侧属性面板 */}
-        <PropertiesPanel />
+        {/* 右侧面板区域 */}
+        <div className="flex flex-col w-80">
+          {/* 属性面板 */}
+          <div className="flex-1">
+            <PropertiesPanel />
+          </div>
+          
+          {/* 预览窗口 */}
+          <div className="p-4 border-t border-gray-700">
+            <PreviewWindow />
+          </div>
+        </div>
       </div>
 
       {/* 底部状态栏 */}
@@ -83,7 +94,7 @@ function App() {
             useSceneStore.getState().currentTool === 'text' ? '文字' : '画笔'
           }</span>
         </div>
-        <div>快捷键: T(文字) D(画笔) V(选择) Del(删除) Esc(取消选择)</div>
+        <div>快捷键: T(文字) D(画笔) V(选择) Del(删除) Esc(取消选择) • 选择模式下可拖动画布</div>
       </footer>
     </div>
   );

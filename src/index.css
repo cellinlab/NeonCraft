@@ -110,6 +110,7 @@ body {
 .relative { position: relative; }
 .absolute { position: absolute; }
 .group:hover .group-hover\:opacity-100 { opacity: 1; }
+.group:hover .group-hover\:pointer-events-auto { pointer-events: auto; }
 .opacity-0 { opacity: 0; }
 .opacity-100 { opacity: 1; }
 .mt-1 { margin-top: 0.25rem; }
@@ -124,6 +125,16 @@ body {
 .left-16 { left: 4rem; }
 .top-1\/2 { top: 50%; }
 .text-gray-300 { color: rgb(209 213 219); }
+.bottom-16 { bottom: 4rem; }
+.border-l-4 { border-left-width: 4px; }
+.border-t-opacity-90 { border-top-color: rgba(0, 0, 0, 0.9); }
+.min-w-48 { min-width: 12rem; }
+.first\:rounded-t-lg:first-child { border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; }
+.last\:rounded-b-lg:last-child { border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; }
+.pl-4 { padding-left: 1rem; }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+.mt-1 { margin-top: 0.25rem; }
+.top-full { top: 100%; }
 
 /* Color classes */
 .bg-black { background-color: rgb(0 0 0); }

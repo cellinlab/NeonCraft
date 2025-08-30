@@ -7,6 +7,8 @@ import type { Node, TextNode, PathNode } from '../types';
 const StageCanvas = () => {
   const stageRef = useRef<Konva.Stage>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
+  const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
   
   const {
     scene,
@@ -69,6 +71,21 @@ const StageCanvas = () => {
   const handleMouseUp = () => {
     if (currentTool === 'draw' && drawingState.isDrawing) {
       endDraw();
+    }
+    setIsDragging(false);
+  };
+
+  // 处理画布拖动
+  const handleStageDragStart = () => {
+    if (currentTool === 'select') {
+      setIsDragging(true);
+    }
+  };
+
+  const handleStageDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
+    if (currentTool === 'select') {
+      setStagePos({ x: e.target.x(), y: e.target.y() });
+      setIsDragging(false);
     }
   };
 
@@ -229,15 +246,22 @@ const StageCanvas = () => {
         width={scene.width}
         height={scene.height}
         scale={{ x: stageScale, y: stageScale }}
+        x={stagePos.x}
+        y={stagePos.y}
+        draggable={currentTool === 'select'}
         style={{
           backgroundColor: scene.background.color,
-          cursor: currentTool === 'draw' ? 'crosshair' : 'default',
+          cursor: currentTool === 'draw' ? 'crosshair' : 
+                  currentTool === 'select' && isDragging ? 'grabbing' :
+                  currentTool === 'select' ? 'grab' : 'default',
           border: '1px solid #374151'
         }}
         onClick={handleStageClick}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onDragStart={handleStageDragStart}
+        onDragEnd={handleStageDragEnd}
       >
         <Layer>
           {/* 渲染所有节点 */}
