@@ -13,6 +13,12 @@ const Toolbar = () => {
       description: '选择和移动元素 (快捷键: V)'
     },
     {
+      id: 'pan',
+      label: '拖动',
+      icon: '✋',
+      description: '拖动画布视图 (快捷键: H 或 空格键)'
+    },
+    {
       id: 'text',
       label: '文字',
       icon: 'T',

@@ -57,7 +57,7 @@ export type Scene = {
   selectedId?: ID; // 选中元素
 };
 
-export type Tool = 'select' | 'text' | 'draw';
+export type Tool = 'select' | 'text' | 'draw' | 'pan';
 
 // 临时绘制状态
 export type DrawingState = {

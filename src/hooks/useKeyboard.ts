@@ -16,6 +16,10 @@ export const useKeyboard = () => {
           e.preventDefault();
           setTool('select');
           break;
+        case 'h':
+          e.preventDefault();
+          setTool('pan');
+          break;
         case 't':
           e.preventDefault();
           setTool('text');

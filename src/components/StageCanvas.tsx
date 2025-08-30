@@ -23,15 +23,23 @@ const StageCanvas = () => {
 
   // 处理舞台点击
   const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+    // 如果正在拖动画布，不处理点击
+    if (isDragging) return;
+    
     const stage = e.target.getStage();
     if (!stage) return;
 
     const pos = stage.getPointerPosition();
     if (!pos) return;
 
+    // 转换坐标（考虑画布偏移和缩放）
+    const transform = stage.getAbsoluteTransform().copy();
+    transform.invert();
+    const relativePos = transform.point(pos);
+
     if (currentTool === 'text') {
       // 添加文字模式
-      useSceneStore.getState().addText({ x: pos.x, y: pos.y });
+      useSceneStore.getState().addText({ x: relativePos.x, y: relativePos.y });
     } else if (currentTool === 'select') {
       // 选择模式 - 点击空白处取消选择
       if (e.target === stage) {
@@ -77,17 +85,51 @@ const StageCanvas = () => {
 
   // 处理画布拖动
   const handleStageDragStart = () => {
-    if (currentTool === 'select') {
+    if (currentTool === 'pan') {
       setIsDragging(true);
     }
   };
 
   const handleStageDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-    if (currentTool === 'select') {
+    if (currentTool === 'pan') {
       setStagePos({ x: e.target.x(), y: e.target.y() });
       setIsDragging(false);
     }
   };
+
+  // 空格键临时拖动功能
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
+  const [tempTool, setTempTool] = useState<Tool | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && !isSpacePressed && !e.repeat) {
+        e.preventDefault();
+        setIsSpacePressed(true);
+        setTempTool(currentTool);
+        useSceneStore.getState().setTool('pan');
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && isSpacePressed) {
+        e.preventDefault();
+        setIsSpacePressed(false);
+        if (tempTool) {
+          useSceneStore.getState().setTool(tempTool);
+          setTempTool(null);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isSpacePressed, currentTool, tempTool]);
 
   // 更新 Transformer
   useEffect(() => {
@@ -248,12 +290,13 @@ const StageCanvas = () => {
         scale={{ x: stageScale, y: stageScale }}
         x={stagePos.x}
         y={stagePos.y}
-        draggable={currentTool === 'select'}
+        draggable={currentTool === 'pan'}
         style={{
           backgroundColor: scene.background.color,
           cursor: currentTool === 'draw' ? 'crosshair' : 
-                  currentTool === 'select' && isDragging ? 'grabbing' :
-                  currentTool === 'select' ? 'grab' : 'default',
+                  currentTool === 'pan' && isDragging ? 'grabbing' :
+                  currentTool === 'pan' ? 'grab' : 
+                  isSpacePressed ? 'grab' : 'default',
           border: '1px solid #374151'
         }}
         onClick={handleStageClick}

@@ -91,10 +91,11 @@ function App() {
           <span>图层: {useSceneStore.getState().scene.nodes.length}</span>
           <span>当前工具: {
             useSceneStore.getState().currentTool === 'select' ? '选择' :
+            useSceneStore.getState().currentTool === 'pan' ? '拖动' :
             useSceneStore.getState().currentTool === 'text' ? '文字' : '画笔'
           }</span>
         </div>
-        <div>快捷键: T(文字) D(画笔) V(选择) Del(删除) Esc(取消选择) • 选择模式下可拖动画布</div>
+        <div>快捷键: V(选择) H(拖动) T(文字) D(画笔) Del(删除) Esc(取消选择) • 空格键临时拖动</div>
       </footer>
     </div>
   );
