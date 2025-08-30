@@ -73,7 +73,7 @@ function App() {
         {/* 右侧面板区域 - 固定宽度 */}
         <div className="w-96 flex-shrink-0 flex flex-col h-full">
           {/* 属性面板 - 可滚动区域 */}
-          <div className="flex-1 min-h-0 overflow-hidden bg-gray-900 border-l border-gray-700 panel-shadow">
+          <div className="flex-1 min-h-0 overflow-hidden bg-gray-900 border-l border-gray-700 panel-shadow" style={{ overflow: 'auto' }}>
             <PropertiesPanel />
           </div>
           
