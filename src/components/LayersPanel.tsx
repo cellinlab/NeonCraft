@@ -25,7 +25,7 @@ const LayersPanel = () => {
       ) : (
         <div className="space-y-1">
           {/* 从上到下显示图层（数组顺序相反） */}
-          {[...scene.nodes].reverse().map((node, index) => (
+          {[...scene.nodes].reverse().map((node) => (
             <div
               key={node.id}
               className={`

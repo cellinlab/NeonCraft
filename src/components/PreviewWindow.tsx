@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { Stage, Layer, Text, Line } from 'react-konva';
 import { useSceneStore } from '../store/scene';
 import type { TextNode, PathNode } from '../types';

@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Text, Line, Transformer } from 'react-konva';
 import Konva from 'konva';
 import { useSceneStore } from '../store/scene';
-import type { Node, TextNode, PathNode } from '../types';
+import type { TextNode, PathNode, Tool } from '../types';
 
 const StageCanvas = () => {
   const stageRef = useRef<Konva.Stage>(null);
@@ -184,7 +184,6 @@ const StageCanvas = () => {
         }}
         onTransformEnd={(e) => {
           const scaleX = e.target.scaleX();
-          const scaleY = e.target.scaleY();
           const rotation = e.target.rotation();
           
           // 重置 scale 并更新 fontSize

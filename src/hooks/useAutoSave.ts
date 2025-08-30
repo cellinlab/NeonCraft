@@ -3,7 +3,7 @@ import { useSceneStore } from '../store/scene';
 
 export const useAutoSave = () => {
   const { scene, saveToLocal } = useSceneStore();
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // 清除之前的定时器
