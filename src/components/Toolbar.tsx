@@ -1,9 +1,29 @@
+import { useState, useEffect } from 'react';
 import { useSceneStore } from '../store/scene';
 import type { Tool } from '../types';
 import { presetScenes } from '../data/presets';
 
 const Toolbar = () => {
   const { currentTool, setTool, addText, loadScene } = useSceneStore();
+  const [showTemplateMenu, setShowTemplateMenu] = useState(false);
+
+  // 点击外部关闭下拉菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.template-dropdown')) {
+        setShowTemplateMenu(false);
+      }
+    };
+
+    if (showTemplateMenu) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showTemplateMenu]);
 
   const tools: { id: Tool; label: string; icon: string; description: string; action?: () => void }[] = [
     {
@@ -86,22 +106,34 @@ const Toolbar = () => {
           添加文字
         </button>
         
-        <div className="relative group">
-          <button className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors">
+        <div className="relative template-dropdown">
+          <button 
+            className="px-3 py-2 bg-gray-800 text-white text-sm rounded border border-gray-600 hover:bg-gray-700 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowTemplateMenu(!showTemplateMenu);
+            }}
+          >
             模板 ▼
           </button>
-          <div className="absolute top-full left-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto z-50 min-w-48">
-            {presetScenes.map((preset) => (
-              <button
-                key={preset.id}
-                onClick={() => loadScene(preset)}
-                className="block w-full px-3 py-2 text-white text-xs text-left hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg"
-                title={`加载模板: ${preset.name}`}
-              >
-                {preset.name}
-              </button>
-            ))}
-          </div>
+          
+          {showTemplateMenu && (
+            <div className="absolute top-full left-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-50 min-w-48">
+              {presetScenes.map((preset) => (
+                <button
+                  key={preset.id}
+                  onClick={() => {
+                    loadScene(preset);
+                    setShowTemplateMenu(false);
+                  }}
+                  className="block w-full px-3 py-2 text-white text-xs text-left hover:bg-gray-700 first:rounded-t-lg last:rounded-b-lg"
+                  title={`加载模板: ${preset.name}`}
+                >
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import type { Scene, Node, ID, TextNode, PathNode, Tool, DrawingState } from '../types';
+import { presetScenes } from '../data/presets';
 
 // 生成唯一ID
 const generateId = (): string => Math.random().toString(36).substring(2, 9);
 
-// 默认场景数据
-const createDefaultScene = (): Scene => ({
+// 默认场景数据 - 使用 Cursor Hackathon Beijing 模板
+const createDefaultScene = (): Scene => (presetScenes.find(s => s.id === 'cursor-hackathon') || {
   id: 'demo-1',
   name: 'NeonCraft Demo',
   width: 1280,
