@@ -58,28 +58,30 @@ function App() {
       {/* 横向工具栏 */}
       <Toolbar />
 
-      {/* 主内容区 */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* 左侧区域：画布 + 图层面板 */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 flex items-center justify-center">
-            <StageCanvas />
-          </div>
-          
-          {/* 底部图层面板 */}
+      {/* 主内容区 - 三栏布局 */}
+      <div className="flex-1 flex min-h-0">
+        {/* 左侧图层面板 - 固定宽度 */}
+        <div className="w-80 flex-shrink-0 flex flex-col bg-gray-800 border-r border-gray-700 panel-shadow">
           <LayersPanel />
         </div>
         
-        {/* 右侧面板区域 */}
-        <div className="flex flex-col w-80">
-          {/* 属性面板 */}
-          <div className="flex-1">
+        {/* 中央画布区域 - 弹性宽度 */}
+        <div className="flex-1 flex items-center justify-center canvas-grid relative min-w-0">
+          <StageCanvas />
+        </div>
+        
+        {/* 右侧面板区域 - 固定宽度 */}
+        <div className="w-96 flex-shrink-0 flex flex-col h-full">
+          {/* 属性面板 - 可滚动区域 */}
+          <div className="flex-1 min-h-0 overflow-hidden bg-gray-900 border-l border-gray-700 panel-shadow">
             <PropertiesPanel />
           </div>
           
-          {/* 预览窗口 */}
-          <div className="p-4 border-t border-gray-700">
-            <PreviewWindow />
+          {/* 预览窗口 - 固定高度 */}
+          <div className="h-56 flex-shrink-0 bg-gray-900 border-l border-t border-gray-700 panel-shadow">
+            <div className="p-4 h-full">
+              <PreviewWindow />
+            </div>
           </div>
         </div>
       </div>

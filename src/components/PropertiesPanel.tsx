@@ -9,9 +9,17 @@ const PropertiesPanel = () => {
 
   if (!selectedNode) {
     return (
-      <div className="bg-gray-900 border-l border-gray-700 p-4 w-80">
-        <h3 className="text-white text-sm font-medium mb-4">属性面板</h3>
-        <p className="text-gray-500 text-sm">请选择一个元素来编辑属性</p>
+      <div className="h-full flex flex-col">
+        <div className="p-4 border-b border-gray-700">
+          <h3 className="text-white text-sm font-medium">属性面板</h3>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="text-center">
+            <div className="text-4xl text-gray-600 mb-2">🎨</div>
+            <p className="text-gray-500 text-sm">请选择一个元素</p>
+            <p className="text-gray-600 text-xs mt-1">在画布或图层面板中选择要编辑的元素</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -29,11 +37,20 @@ const PropertiesPanel = () => {
   const presetColors = colorPresets.map(preset => preset.color);
 
   return (
-    <div className="bg-gray-900 border-l border-gray-700 p-4 w-80 overflow-y-auto">
-      <h3 className="text-white text-sm font-medium mb-4">属性面板</h3>
+    <div className="h-full flex flex-col">
+      {/* 标题栏 - 固定不滚动 */}
+      <div className="p-4 border-b border-gray-700">
+        <h3 className="text-white text-sm font-medium">属性面板</h3>
+        <p className="text-xs text-gray-400 mt-1">
+          {selectedNode.type === 'text' ? '文字元素' : '路径元素'} #{selectedNode.id.slice(-4)}
+        </p>
+      </div>
       
-      {/* 基础属性 */}
-      <div className="space-y-4">
+      {/* 内容区域 - 可滚动 */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0">
+        <div className="p-4">
+          {/* 基础属性 */}
+          <div className="space-y-4">
         <div>
           <label className="text-white text-xs font-medium block mb-2">
             颜色 ({selectedNode.type === 'text' ? '描边' : '线条'})
@@ -232,14 +249,16 @@ const PropertiesPanel = () => {
         </div>
       )}
 
-      {/* 操作按钮 */}
-      <div className="mt-8 pt-4 border-t border-gray-700">
-        <button
-          onClick={() => removeNode(selectedNode.id)}
-          className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-        >
-          删除元素
-        </button>
+        {/* 操作按钮 */}
+        <div className="mt-8 pt-4 border-t border-gray-700">
+          <button
+            onClick={() => removeNode(selectedNode.id)}
+            className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+          >
+            删除元素
+          </button>
+        </div>
+        </div>
       </div>
     </div>
   );

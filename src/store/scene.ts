@@ -64,6 +64,7 @@ interface SceneStore {
   // 图层操作
   bringForward: (id: ID) => void;
   sendBackward: (id: ID) => void;
+  reorderLayers: (fromIndex: number, toIndex: number) => void;
   
   // 持久化
   saveToLocal: () => void;
@@ -199,6 +200,15 @@ export const useSceneStore = create<SceneStore>((set, get) => ({
     if (index > 0) {
       [nodes[index], nodes[index - 1]] = [nodes[index - 1], nodes[index]];
     }
+    return {
+      scene: { ...state.scene, nodes }
+    };
+  }),
+
+  reorderLayers: (fromIndex, toIndex) => set((state) => {
+    const nodes = [...state.scene.nodes];
+    const [movedNode] = nodes.splice(fromIndex, 1);
+    nodes.splice(toIndex, 0, movedNode);
     return {
       scene: { ...state.scene, nodes }
     };
