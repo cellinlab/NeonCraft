@@ -135,6 +135,10 @@ body {
 .shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
 .mt-1 { margin-top: 0.25rem; }
 .top-full { top: 100%; }
+.w-24 { width: 6rem; }
+.fixed { position: fixed; }
+.transition-opacity { transition-property: opacity; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.duration-300 { transition-duration: 300ms; }
 
 /* Color classes */
 .bg-black { background-color: rgb(0 0 0); }

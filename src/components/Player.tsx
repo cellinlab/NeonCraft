@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Stage, Layer, Text, Line } from 'react-konva';
+import { Stage, Layer, Text, Line, Rect, Group } from 'react-konva';
 import Konva from 'konva';
 import { useSceneStore } from '../store/scene';
 import type { TextNode, PathNode } from '../types';
@@ -13,38 +13,64 @@ const Player = ({ onExit }: PlayerProps) => {
   const layerRef = useRef<Konva.Layer>(null);
   const [globalBrightness, setGlobalBrightness] = useState(1);
   const [globalHue, setGlobalHue] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showControls, setShowControls] = useState(false);
+  const [controlsTimeout, setControlsTimeout] = useState<NodeJS.Timeout | null>(null);
   
   const { scene } = useSceneStore();
 
-  // 全屏功能
-  const toggleFullscreen = async () => {
-    if (!document.fullscreenElement) {
-      try {
-        await document.documentElement.requestFullscreen();
-        setIsFullscreen(true);
-      } catch (err) {
-        console.error('无法进入全屏模式:', err);
-      }
-    } else {
-      try {
-        await document.exitFullscreen();
-        setIsFullscreen(false);
-      } catch (err) {
-        console.error('无法退出全屏模式:', err);
-      }
-    }
-  };
-
-  // 监听全屏状态变化
+  // 自动进入全屏
   useEffect(() => {
+    const enterFullscreen = async () => {
+      if (!document.fullscreenElement) {
+        try {
+          await document.documentElement.requestFullscreen();
+        } catch (err) {
+          console.error('无法进入全屏模式:', err);
+        }
+      }
+    };
+
+    enterFullscreen();
+
+    // 监听全屏退出事件
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      if (!document.fullscreenElement) {
+        // 如果退出了全屏，也退出展示模式
+        onExit();
+      }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
+  }, [onExit]);
+
+  // 鼠标移动显示控制面板
+  useEffect(() => {
+    const handleMouseMove = () => {
+      setShowControls(true);
+      
+      // 清除之前的定时器
+      if (controlsTimeout) {
+        clearTimeout(controlsTimeout);
+      }
+      
+      // 3秒后隐藏控制面板
+      const timeout = setTimeout(() => {
+        setShowControls(false);
+      }, 3000);
+      
+      setControlsTimeout(timeout);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (controlsTimeout) {
+        clearTimeout(controlsTimeout);
+      }
+    };
+  }, [controlsTimeout]);
 
   // 动画效果
   useEffect(() => {
@@ -91,20 +117,33 @@ const Player = ({ onExit }: PlayerProps) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onExit]);
 
-  // 计算画布大小
-  const containerSize = {
+  // 计算画布大小 - 填满整个屏幕
+  const [screenSize, setScreenSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight
-  };
+  });
 
-  const scaleX = containerSize.width / scene.width;
-  const scaleY = containerSize.height / scene.height;
-  const scale = Math.min(scaleX, scaleY);
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 使用覆盖模式 - 确保填满整个屏幕
+  const scaleX = screenSize.width / scene.width;
+  const scaleY = screenSize.height / scene.height;
+  const scale = Math.max(scaleX, scaleY); // 使用 max 而不是 min，确保填满
 
   const scaledWidth = scene.width * scale;
   const scaledHeight = scene.height * scale;
-  const offsetX = (containerSize.width - scaledWidth) / 2;
-  const offsetY = (containerSize.height - scaledHeight) / 2;
+  const offsetX = (screenSize.width - scaledWidth) / 2;
+  const offsetY = (screenSize.height - scaledHeight) / 2;
 
   // 渲染文字节点
   const renderTextNode = (node: TextNode) => {
@@ -164,29 +203,36 @@ const Player = ({ onExit }: PlayerProps) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black flex items-center justify-center"
+      className="fixed inset-0 bg-black"
       style={{
-        filter: `brightness(${globalBrightness}) hue-rotate(${globalHue + scene.global.hueRotate}deg)`
+        filter: `brightness(${globalBrightness}) hue-rotate(${globalHue + scene.global.hueRotate}deg)`,
+        cursor: 'none' // 隐藏鼠标光标
       }}
     >
-      {/* 画布 */}
-      <div
+      {/* 全屏画布 */}
+      <Stage
+        ref={stageRef}
+        width={screenSize.width}
+        height={screenSize.height}
         style={{
-          width: scaledWidth,
-          height: scaledHeight,
-          position: 'relative'
+          backgroundColor: scene.background.color
         }}
       >
-        <Stage
-          ref={stageRef}
-          width={scene.width}
-          height={scene.height}
-          scale={{ x: scale, y: scale }}
-          style={{
-            backgroundColor: scene.background.color
-          }}
-        >
-          <Layer ref={layerRef}>
+        <Layer ref={layerRef}>
+          {/* 背景填充 */}
+          <Rect
+            width={screenSize.width}
+            height={screenSize.height}
+            fill={scene.background.color}
+          />
+          
+          {/* 内容组 */}
+          <Group
+            x={offsetX}
+            y={offsetY}
+            scaleX={scale}
+            scaleY={scale}
+          >
             {scene.nodes.map((node) => {
               if (node.type === 'text') {
                 return renderTextNode(node as TextNode);
@@ -195,14 +241,19 @@ const Player = ({ onExit }: PlayerProps) => {
               }
               return null;
             })}
-          </Layer>
-        </Stage>
-      </div>
+          </Group>
+        </Layer>
+      </Stage>
 
-      {/* 控制面板 */}
-      <div className="fixed top-4 right-4 bg-black bg-opacity-70 p-4 rounded-lg space-y-3">
-        <div className="text-white text-sm">
-          <label className="block mb-1">整体亮度: {Math.round(globalBrightness * 100)}%</label>
+      {/* 隐藏的控制面板 - 只在鼠标移动时显示 */}
+      <div 
+        className={`fixed top-4 right-4 bg-black bg-opacity-80 p-3 rounded-lg space-y-2 transition-opacity duration-300 ${
+          showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        style={{ cursor: 'default' }}
+      >
+        <div className="text-white text-xs">
+          <label className="block mb-1">亮度: {Math.round(globalBrightness * 100)}%</label>
           <input
             type="range"
             min="0.2"
@@ -210,42 +261,28 @@ const Player = ({ onExit }: PlayerProps) => {
             step="0.1"
             value={globalBrightness}
             onChange={(e) => setGlobalBrightness(Number(e.target.value))}
-            className="w-full"
+            className="w-24"
           />
         </div>
 
-        <div className="text-white text-sm">
-          <label className="block mb-1">色相偏移: {globalHue}°</label>
+        <div className="text-white text-xs">
+          <label className="block mb-1">色相: {globalHue}°</label>
           <input
             type="range"
             min="-180"
             max="180"
             value={globalHue}
             onChange={(e) => setGlobalHue(Number(e.target.value))}
-            className="w-full"
+            className="w-24"
           />
         </div>
 
-        <div className="flex gap-2">
-          <button
-            onClick={toggleFullscreen}
-            className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
-          >
-            {isFullscreen ? '退出全屏' : '全屏'}
-          </button>
-          
-          <button
-            onClick={onExit}
-            className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
-          >
-            退出
-          </button>
-        </div>
-      </div>
-
-      {/* 提示文字 */}
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm bg-black bg-opacity-70 px-4 py-2 rounded">
-        按 ESC 键退出展示模式
+        <button
+          onClick={onExit}
+          className="w-full px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
+        >
+          退出 (ESC)
+        </button>
       </div>
     </div>
   );
