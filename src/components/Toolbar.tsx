@@ -4,7 +4,7 @@ import type { Tool } from '../types';
 import { presetScenes } from '../data/presets';
 
 const Toolbar = () => {
-  const { currentTool, setTool, addText, loadScene } = useSceneStore();
+  const { currentTool, setTool, addText, loadScene, clearCanvas, newCanvas } = useSceneStore();
   const [showTemplateMenu, setShowTemplateMenu] = useState(false);
 
   // 点击外部关闭下拉菜单
@@ -96,6 +96,33 @@ const Toolbar = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* 画布操作 */}
+      <div className="border-l border-gray-700 pl-4 flex items-center gap-2">
+        <button
+          onClick={() => {
+            if (confirm('确定要新建画布吗？当前内容将被替换')) {
+              newCanvas();
+            }
+          }}
+          className="px-3 py-2 bg-blue-600 text-white text-sm rounded border border-blue-500 hover:bg-blue-700 transition-colors"
+          title="新建画布"
+        >
+          新建
+        </button>
+        
+        <button
+          onClick={() => {
+            if (confirm('确定要清空所有元素吗？此操作不可撤销')) {
+              clearCanvas();
+            }
+          }}
+          className="px-3 py-2 bg-orange-600 text-white text-sm rounded border border-orange-500 hover:bg-orange-700 transition-colors"
+          title="清空画布"
+        >
+          清空
+        </button>
       </div>
       
       <div className="border-l border-gray-700 pl-4 flex items-center gap-3">

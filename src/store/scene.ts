@@ -68,6 +68,10 @@ interface SceneStore {
   // 持久化
   saveToLocal: () => void;
   loadFromLocal: () => void;
+  
+  // 画布操作
+  clearCanvas: () => void;
+  newCanvas: () => void;
 }
 
 export const useSceneStore = create<SceneStore>((set, get) => ({
@@ -219,5 +223,23 @@ export const useSceneStore = create<SceneStore>((set, get) => ({
     } catch (error) {
       console.error('Failed to load scene:', error);
     }
+  },
+
+  clearCanvas: () => set((state) => ({
+    scene: {
+      ...state.scene,
+      nodes: [],
+      selectedId: undefined
+    }
+  })),
+
+  newCanvas: () => {
+    const newScene = createDefaultScene();
+    // 生成新的ID确保是全新的画布
+    newScene.id = generateId();
+    set({ 
+      scene: newScene,
+      currentTool: 'select'
+    });
   }
 }));

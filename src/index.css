@@ -154,6 +154,10 @@ body {
 .bg-red-600 { background-color: rgb(220 38 38); }
 .bg-red-700 { background-color: rgb(185 28 28); }
 .bg-green-500 { background-color: rgb(34 197 94); }
+.bg-orange-600 { background-color: rgb(234 88 12); }
+.bg-orange-700 { background-color: rgb(194 65 12); }
+.border-blue-500 { border-color: rgb(59 130 246); }
+.border-orange-500 { border-color: rgb(249 115 22); }
 .bg-opacity-70 { --tw-bg-opacity: 0.7; }
 .bg-opacity-80 { --tw-bg-opacity: 0.8; }
 .bg-opacity-20 { --tw-bg-opacity: 0.2; }
@@ -175,6 +179,7 @@ body {
 .hover\:neon-glow:hover { 
   filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 6px currentColor) drop-shadow(0 0 9px currentColor);
 }
+.hover\:bg-orange-700:hover { background-color: rgb(194 65 12); }
 
 /* Neon effects */
 .neon-glow {
