@@ -6,7 +6,6 @@ import {
   LuPaintbrush, 
   LuEye, 
   LuEyeOff, 
-  LuLock, 
   LuLockOpen,
   LuArrowUp,
   LuArrowDown,
