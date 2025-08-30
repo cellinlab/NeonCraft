@@ -164,6 +164,73 @@ export const presetScenes: Scene[] = [
   },
   
   {
+    id: 'k86juek',
+    name: 'NeonCraft Demo',
+    width: 1280,
+    height: 720,
+    background: { color: '#0B0F1A' },
+    global: { 
+      brightness: 1, 
+      hueRotate: 0, 
+      animation: 'breathe', 
+      animSpeed: 0.6 
+    },
+    nodes: [
+      {
+        id: 't1',
+        type: 'text',
+        text: 'NEON',
+        x: 470, 
+        y: 210, 
+        rotation: 0, 
+        scaleX: 1, 
+        scaleY: 1,
+        stroke: '#00F0FF', 
+        strokeWidth: 10, 
+        fill: '#001014',
+        glow: { enabled: true, blur: 40, intensity: 0.9 },
+        fontSize: 120, 
+        opacity: 1,
+        fontFamily: 'Arial'
+      },
+      {
+        id: '5w24ddl',
+        type: 'text',
+        text: 'CRAFT',
+        x: 461.00077164401495, 
+        y: 371.20389664401404, 
+        rotation: 0, 
+        scaleX: 1, 
+        scaleY: 1,
+        stroke: '#FF4000', 
+        strokeWidth: 14, 
+        fill: '#001014',
+        glow: { enabled: true, blur: 41, intensity: 0.9 },
+        fontSize: 169, 
+        opacity: 1,
+        fontFamily: 'Times New Roman'
+      },
+      {
+        id: '2wzu5bk',
+        type: 'text',
+        text: '🚀',
+        x: 888.6468247455095, 
+        y: 221.26376914580072, 
+        rotation: 1.8307878604507841, 
+        scaleX: 1, 
+        scaleY: 1,
+        stroke: '#FFFF00', 
+        strokeWidth: 8, 
+        fill: '#001014',
+        glow: { enabled: true, blur: 30, intensity: 0.8 },
+        fontSize: 95.14017496600371, 
+        opacity: 1,
+        fontFamily: 'Arial'
+      }
+    ]
+  },
+  
+  {
     id: 'neon-bar',
     name: '霓虹酒吧',
     width: 1280,
